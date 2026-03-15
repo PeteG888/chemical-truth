@@ -47,7 +47,7 @@
 
   /* SCREENS */
   .screen { display: none; animation: fadeIn 0.8s ease; }
-  .screen.active { display: block; }
+  .screen.active { display: flex; }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(12px); }
@@ -617,7 +617,7 @@
       <div class="char-number">PATH 01 / 03 — WEEK 1</div>
       <div class="char-role">&#9632; The Engineer</div>
       <div class="char-name">The Smell<br>Nobody<br>Talks About</div>
-      <div class="char-hook">"Day 47 of the shutdown. Ren pulled his respirator tighter and tried not to think about what last week's blood test meant..."</div>
+      <div class="char-hook">"Day 47 of the shutdown. The heat exchanger bundle smelled like something slowly expiring. The monitor said the air was safe. It wasn't measuring the right thing..."</div>
       <div class="char-arrow">→</div>
     </div>
 
@@ -787,7 +787,4 @@
   function backToIntro() {
     document.getElementById('story').style.display = 'none';
     document.getElementById('intro').style.display = 'flex';
-  }
-
-  function startStory(charKey) {
-  
+ 
