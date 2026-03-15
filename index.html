@@ -679,27 +679,31 @@
       title: 'The Smell Nobody <em>Talks About</em>',
       color: '#e8a020',
       episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
-      cliffhanger: 'The LEL monitor ticked to 8.6%. The entry permit was clipped to the access ladder. Ren reached for it — and stopped. The atmospheric reading recorded at 06:00 that morning was 4.1%. It was now 09:23. The LEL was climbing, but the paperwork said everything was fine. Ren looked at the signature in the authorising officer field. It was his own handwriting. Precise. Familiar. But he had no memory of holding the pen. No memory of the 06:00 check at all. The fog wasn\'t just in the heat exchanger anymore… it was in his head. To be continued… Episode 2 — The Turnaround Manager — drops next Monday.',
+      cliffhanger: 'The LEL monitor ticked to 8.6%. The entry permit was clipped to the access ladder. Ren reached for it — and stopped. The atmospheric reading recorded at 06:00 that morning was 4.1%. It was now 09:23. The LEL was climbing, but the paperwork said everything was fine. At a glance the signature in the authorising officer field looked like his… but something about it felt off. He couldn\'t place it. Not yet. The fog wasn\'t just in the heat exchanger anymore… it was in his head. To be continued… Episode 2 — The Turnaround Manager — drops next Monday.',
       story: `
 <p class="voice-label">NARRATOR</p>
 <p>Day 47 of the shutdown… and the heat exchanger bundle smelled like something that had been slowly expiring inside a chemical drum for the better part of a decade. Which was, as it happened… a reasonably accurate description of its contents.</p>
 
 <p>Ren had worked enough turnarounds to know the smell without needing the label. MEK. Methyl ethyl ketone… fast… aggressive… on the approved chemical register since before anyone currently on site had started shaving. The circuit had a leak. Not a dramatic one. Just a slow… patient seep from a flange coupling on the return line. The kind that caught the light… and then evaporated before anyone thought to measure it. Ren had logged it on Day 44. Someone had initialled the log on Day 45… without leaving their office to confirm it.</p>
 
+<p>What nobody had logged — what nobody appeared to be measuring at all — was what that seep was doing to the people working beside it. Eight hours a shift. Forty-seven days in. In an enclosed space with airflow that moved exactly as well as the maintenance budget allowed.</p>
+
 <p class="voice-label">REN</p>
-<p>Del was on the far side of the bundle, torquing the bolts on a blind flange cover. Methodical. Careful. This morning… he had torqued the same bolt three times.</p>
+<p>Del was on the far side of the bundle, torquing the bolts on a blind flange cover. Methodical. Careful. This morning… he had torqued the same bolt three times. I watched him without appearing to watch. The job teaches you that eventually — how to see things without making them real by looking at them directly.</p>
 
 <p class="voice-label">NARRATOR</p>
 <p>The LEL monitor on Ren's belt read 8.4%. The action threshold was 10%. What the LEL monitor did not measure… was health exposure. 8.4% translated to approximately 1,176 parts per million in the air they were breathing. The legal limit was 200. The monitor was doing its job perfectly. Its job was to prevent an explosion. Nobody's job, apparently… was to eliminate the health exposure.</p>
+
+<p>The difference between those two things — between preventing a fire and protecting the people — was the difference between a site that stays open and a site that doesn't. Between a company that absorbs a near-miss and one that loses months of production, faces a full regulator shutdown, and finds its insurance policy has a clause nobody read carefully enough.</p>
 
 <p class="voice-label">SETCH</p>
 <p>We're behind on the bundle return schedule. Get it done.</p>
 
 <p class="voice-label">REN</p>
-<p>I gave the universal gesture that meant I'd handle it.</p>
+<p>I gave the universal gesture that meant I'd handle it. What I didn't say — what I had no way of saying in a confined space with a foreman who measured reality in shift completions — was that Del had mentioned headaches every morning for eleven days. That two other crew members had visited the site medic so often the medic had filed an informal query. That the query had received an informal response. That nobody had connected those visits to the return line. That nobody appeared to want to.</p>
 
 <p class="voice-label">NARRATOR</p>
-<p>What Ren did not say… was that Del had mentioned headaches every morning for eleven days. That two other crew members had visited the site medic so often the medic had filed an informal query. The MEK safety data sheet listed persistent headache, dizziness, and impaired cognitive function under repeated exposure. <em>Repeated exposure</em> was doing extraordinary work in a confined space with a leaking return line on Day 47 of a sixty-day turnaround.</p>
+<p>The safety data sheet listed headaches, dizziness, impaired cognition. Further down — past the part most people ever read — liver damage. Neurological effects. Reproductive harm. Documented outcomes. From turnarounds not unlike this one. Nobody had read that far. The monitor said they were safe. That was enough… until it wasn't. One hospitalisation. One incident report with the right timestamp. One regulator visit — and this site stops running a turnaround. It becomes an investigation.</p>
 
 <p class="voice-label">DEL</p>
 <p>I set the torque wrench down… stood very still for a moment… then picked it up and kept going.</p>
@@ -786,38 +790,4 @@
   }
 
   function startStory(charKey) {
-    currentCharacter = charKey;
-    const char = characters[charKey];
-    setStoryColor(char.color);
-
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('story').style.display = 'block';
-    window.scrollTo(0, 0);
-
-    document.getElementById('storyBadge').textContent = char.role;
-    document.getElementById('storyTitle').innerHTML = char.title;
-    document.getElementById('storyEp').textContent = char.episode;
-
-    const nextLabel = charKey === 'engineer'
-      ? '&#9632; Episode 2 — THE TURNAROUND MANAGER — drops next Monday &#9632;'
-      : charKey === 'manager'
-      ? '&#9632; Episode 2 — THE GENERAL MANAGER — drops Week 3 Monday &#9632;'
-      : '&#9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
-
-    document.getElementById('storyContent').innerHTML = `
-      <div class="story-body">
-        ${char.story}
-      </div>
-      <div class="cliffhanger">
-        <div class="cliff-label">&#9632; To Be Continued &#9632;</div>
-        <div class="cliff-text">${char.cliffhanger}</div>
-        <div class="cliff-next">${nextLabel}</div>
-      </div>
-    `;
-  }
-
-  document.getElementById('story').style.display = 'none';
-</script>
-
-</body>
-</html>
+  
