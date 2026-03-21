@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -443,6 +443,18 @@
     border-left: 2px solid rgba(232,160,32,0.2);
   }
 
+  /* Scene titles */
+  .scene-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: #555555;
+    text-transform: uppercase;
+    margin: 40px 0 16px 0;
+    padding-top: 16px;
+    border-top: 1px solid #2a2a2a;
+  }
+
   /* Cliffhanger */
   .cliffhanger {
     margin-top: 64px;
@@ -716,28 +728,97 @@
       title: 'The Call at <em>3am</em>',
       color: '#c0392b',
       episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
-      cliffhanger: 'His phone buzzed a second time. A message from the site safety officer, timestamped 03:09 — eight minutes before the customs call. Nolan had not seen it until now. The subject line read: Atmospheric monitoring data — instrument workshop — urgent — request to discuss before morning briefing. Attached was a single file. He opened it. The readings were dated across the last four turnarounds. The trend moved in one direction only, and it did not stop at this facility.',
-      story: `<p>The phone read 03:17. Nolan had not been asleep.</p>
+      cliffhanger: 'The readings were dated across the last four turnarounds. The trend moved in one direction only. Nolan looked at the facility through the window. Somewhere out there — less than three hours from now — a man named Ren Callard would sign an entry permit for a confined space that smelled exactly like the solvent sitting in those one hundred and eighty drums. He didn\'t know that yet. To be continued… Episode 3 — The General Manager — drops next Monday.',
+      story: `
+<p class="voice-label">NARRATOR</p>
+<p>Day 47 of the shutdown… 03:17am… Six hours before an engineer named Ren would enter a confined space and watch his colleague torque the same bolt three times.</p>
+<p>Nolan was already awake…</p>
 
-<p>He had been lying in the particular darkness of a man who has run the same calculation forty-one times across the span of a single night and keeps arriving at an answer he cannot share with anyone. Thirty-seven days to restart. That was the number that existed in board presentations, in the project management system, in the emails his regional director forwarded upward with the kind of confidence that suggested he had not personally verified them.</p>
+<p class="scene-title">— THE IMMINENT CALL</p>
 
-<p>The number that existed only inside Nolan's head was fifty-two.</p>
+<p class="voice-label">NOLAN</p>
+<p>One hundred and eighty drums. Our bonded licence covers one hundred and fifty. The remaining thirty can't be released without compliant on-site storage.</p>
+<p>……We don't have it.</p>
+<p>……We can't build it before Monday.</p>
 
-<p>The gap between thirty-seven and fifty-two was not a scheduling problem. It was a category of problem for which no project management software had yet developed an appropriate field.</p>
+<p class="voice-label">NARRATOR</p>
+<p>……Fourteen turnarounds….He knew what a call at this hour meant…..This one was different.</p>
 
-<p>He answered on the second ring.</p>
+<p class="scene-title">— THE WINDOW CONTEMPLATION</p>
 
-<p>Customs. Port authority bonded storage. A consignment of one hundred and eighty drums of petroleum-based hydrocarbon cleaning solvent — the same product his maintenance contractor had specified for valve and instrument cleaning across the last six turnarounds without incident or question — had been flagged under a revised flammable goods import protocol that had come into force eleven days ago. Class 3 flammable liquid. The bonded facility held a licence for one hundred and fifty drums. The remaining thirty could not be released without compliant on-site storage that the facility did not have and could not construct before Monday.</p>
+<p class="voice-label">NOLAN</p>
+<p>Thirty-seven days. That's what the board believes. That's what exists in the presentations, the project system, the emails my regional director forwards upward with the kind of confidence that suggests he hasn't personally verified them.</p>
+<p>…..The number that exists only in my head is fifty-two.</p>
+<p>The gap between those two numbers is not a scheduling problem…..</p>
 
-<p>Nolan got up and walked to the window. The facility was visible from his apartment on clear nights — a low constellation of amber lights on the plain, the flare stack making its irregular punctuation against the dark. He had stopped finding it beautiful approximately four turnarounds ago.</p>
+<p class="scene-title">— THE LAPTOP REALISATION</p>
 
-<p>He opened his laptop. The critical path summary showed seventy-four work packages across fourteen disciplines. Eleven were already amber. Valve overhaul and instrument cleaning sat across work packages thirty-one through thirty-eight, scheduled to begin in nine days. Without the solvent, they could not begin. Without beginning them on schedule, the gap between thirty-seven and fifty-two would become a gap between thirty-seven and something he was not yet prepared to calculate.</p>
+<p class="voice-label">NARRATOR</p>
+<p>He opened the laptop. Seventy-four work packages. Fourteen disciplines. Eleven already amber. Valve overhaul and instrument cleaning — work packages thirty-one through thirty-eight — starts in nine days. The solvent flagged at customs was specified for that work. Not the heat exchanger circuit. Not the tank farm programme. The valve and instrument cleaning stream.</p>
+<p>The facility was running three solvent streams simultaneously across the turnaround. Different applications. Different work packages. Different supervisors. Nobody had looked at them together.</p>
 
-<p>He called the procurement lead — a composed woman named Cavers who answered with the focused calm of someone who had also not been asleep — and explained the situation in the compressed language of people who have conducted too many conversations of this kind at too many hours of this nature.</p>
+<p class="voice-label">NOLAN</p>
+<p>Without beginning on schedule — the number stops being fifty-two. And I have no word for what it becomes……</p>
 
-<p>Cavers produced an expression that would have required a formal incident report and a specialist in industrial linguistics to process correctly, and said she would contact alternative suppliers at first light.</p>
+<p class="scene-title">— THE PROCUREMENT MANAGER — JESS CAVERS</p>
 
-<p>What neither of them mentioned: that three other facilities in the group had quietly moved away from this category of solvent following internal safety reviews. That the atmospheric readings from the instrument workshop during the last turnaround had shown elevated hydrocarbon vapour concentrations that no one had formally attributed to anything. That the new customs protocol existed specifically because regulators in four countries had reached similar conclusions about this product class at approximately the same time, which was the kind of coincidence that was not actually a coincidence.</p>`,
+<p class="voice-label">NOLAN</p>
+<p>Jess…. Customs flagged our solvent consignment. One-eighty drums, thirty over our bonded limit. Instrument cleaning starts in nine days. I need alternative suppliers by first light.</p>
+
+<p class="voice-label">CAVERS</p>
+<p>What classification?</p>
+
+<p class="voice-label">NOLAN</p>
+<p>UN1993. Class 3 flammable.</p>
+
+<p class="voice-label">CAVERS</p>
+<p>That's the problem…..Every alternative in that class has the same storage issue…. I'll look outside it.</p>
+
+<p class="voice-label">NOLAN</p>
+<p>…..Outside it?</p>
+
+<p class="voice-label">CAVERS</p>
+<p>Non-flammable alternatives exist. I'll have options on your desk by six. There's something else though. While I'm searching the approved products register — one of the alternatives I'm looking at is already on our group approved list. It's been used at two other facilities in the network for the last eighteen months.</p>
+
+<p class="voice-label">NOLAN</p>
+<p>……It's already approved?</p>
+
+<p class="voice-label">CAVERS</p>
+<p>Approved, tested and in use. Nobody told this site. The only reason I found it is because I searched manually across every divisional register we have access to at 3am. That is not a system. That is luck. If our data registers were connected — properly connected — you would have known this fourteen months ago when your specifications were locked.</p>
+
+<p class="voice-label">NOLAN</p>
+<p>………….Find me the alternatives. Six o'clock.</p>
+
+<p class="voice-label">NARRATOR</p>
+<p>He didn't say what he was thinking. That luck was not a procurement strategy. That somewhere in the organisation a system should exist that could have connected these registers automatically. That nobody had built it yet for this application. That the minimum cost of not building it was sitting in one hundred and eighty drums at a bonded customs facility.</p>
+
+<p class="scene-title">— THE MESSAGE NOLAN HADN'T SEEN UNTIL NOW</p>
+
+<p class="voice-label">NARRATOR</p>
+<p>His phone showed a message timestamped 03:09. Eight minutes before the customs call. Sender: Prentiss — Site Safety Officer. He had not seen it until now.</p>
+
+<p class="voice-label">PRENTISS</p>
+<p>Nolan. The current solvent is approved on paper. But we are exceeding the exposure limit daily. Fifty parts per million is the legal threshold. We cleared that some time ago.</p>
+<p>The flash point is thirty-eight degrees. We are working in spaces that regularly exceed that ambient temperature.</p>
+<p>One shift too many and someone ends up in hospital. Or we lose the site to a fire incident.</p>
+<p>I need a multi-use, non-flammable alternative that delivers the same cleaning performance without the health complaints or the fire risk.</p>
+<p>I have attached the atmospheric monitoring data from the last four turnarounds.</p>
+<p>I have been waiting for someone to ask me this question for two turnarounds. I am not waiting any longer.</p>
+
+<p class="scene-title">— THE REALISATION CONFIRMED</p>
+
+<p class="voice-label">NOLAN</p>
+<p>She sent this eight minutes before customs called.</p>
+
+<p class="voice-label">NARRATOR</p>
+<p>………This isn't four problems.</p>
+<p>The customs flag. The bonded licence. The work packages. The exposure readings climbing across four consecutive turnarounds. A safety officer who had been documenting all of it.</p>
+<p>One problem.(….)</p>
+<p>And it did not stop at this facility.</p>
+<p>(…..)The readings were dated across the last four turnarounds. The trend moved in one direction only.</p>
+<p>Nolan looked at the facility through the window.</p>
+<p>Somewhere out there — less than three hours from now — a man named Ren Callard would sign an entry permit for a confined space that smelled exactly like the solvent sitting in those one hundred and eighty drums.</p>
+<p>He didn't know that yet.(…….)</p>`,
     },
     ceo: {
       role: 'THE GENERAL MANAGER',
@@ -787,3 +868,41 @@
   function backToIntro() {
     document.getElementById('story').style.display = 'none';
     document.getElementById('intro').style.display = 'flex';
+  }
+
+  function startStory(charKey) {
+    currentCharacter = charKey;
+    const char = characters[charKey];
+    setStoryColor(char.color);
+
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('story').style.display = 'flex';
+    window.scrollTo(0, 0);
+
+    document.getElementById('storyBadge').textContent = char.role;
+    document.getElementById('storyTitle').innerHTML = char.title;
+    document.getElementById('storyEp').textContent = char.episode;
+
+    const nextLabel = charKey === 'engineer'
+      ? '&#9632; Episode 2 — THE TURNAROUND MANAGER — drops next Monday &#9632;'
+      : charKey === 'manager'
+      ? '&#9632; Episode 2 — THE GENERAL MANAGER — drops Week 3 Monday &#9632;'
+      : '&#9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
+
+    document.getElementById('storyContent').innerHTML = `
+      <div class="story-body">
+        ${char.story}
+      </div>
+      <div class="cliffhanger">
+        <div class="cliff-label">&#9632; To Be Continued &#9632;</div>
+        <div class="cliff-text">${char.cliffhanger}</div>
+        <div class="cliff-next">${nextLabel}</div>
+      </div>
+    `;
+  }
+
+  document.getElementById('story').style.display = 'none';
+</script>
+
+</body>
+</html>
