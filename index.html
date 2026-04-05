@@ -634,13 +634,13 @@
     </div>
 
     <div class="char-card manager locked" onclick="showLocked()">
-      <div class="char-number">PATH 02 / 03 — WEEK 2</div>
-      <div class="char-role">&#9632; The Turnaround Manager</div>
-      <div class="char-name">The Call<br>at<br>3am</div>
-      <div class="char-hook">"Thirty-seven days to restart. That's what the board believed. Nolan knew the real number was closer to fifty-two..."</div>
-      <div class="lock-badge">&#9632; Don't miss Episode 2 — THE TURNAROUND MANAGER — Next Monday &#9632;</div>
-      <div class="char-arrow">→</div>
-    </div>
+     <div class="char-card manager" onclick="startStory('manager')">
+  <div class="char-number">PATH 02 / 03 — WEEK 2</div>
+  <div class="char-role">&#9632; The Turnaround Manager</div>
+  <div class="char-name">The Call<br>at<br>3am</div>
+  <div class="char-hook">"Thirty-seven days to restart. That's what the board believed. Nolan knew the real number was closer to fifty-two..."</div>
+  <div class="char-arrow">→</div>
+</div>
 
     <div class="char-card ceo locked" onclick="showLocked()">
       <div class="char-number">PATH 03 / 03 — WEEK 3</div>
@@ -890,10 +890,10 @@
     document.getElementById('storyEp').textContent = char.episode;
 
     const nextLabel = charKey === 'engineer'
-      ? '&#9632; Episode 2 — THE TURNAROUND MANAGER — drops next Monday &#9632;'
-      : charKey === 'manager'
-      ? '&#9632; Episode 2 — THE GENERAL MANAGER — drops Week 3 Monday &#9632;'
-      : '&#9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
+? '#&9632; Episode 2 — THE TURNAROUND MANAGER — Now Available &#9632;'
+: charKey === 'manager'
+? '#&9632; Episode 3 — THE GENERAL MANAGER — drops next Monday &#9632;'
+: '#&9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
 
     document.getElementById('storyContent').innerHTML = `
       <div class="story-body">
