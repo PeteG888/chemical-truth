@@ -907,7 +907,40 @@
   }
 
   document.getElementById('story').style.display = 'none';
-</script>
+/* ====================== AUTOMATIC WEEKLY UNLOCK ====================== */
+const EPISODE_RELEASES = {
+  engineer: new Date('2026-03-30'),   // Week 1 — already live
+  manager:  new Date('2026-04-06'),   // Week 2 — live today
+  ceo:      new Date('2026-04-13')    // Week 3 — next Monday
+  // Add future weeks here, e.g. week4: new Date('2026-04-20'),
+};
+
+function isReleased(charKey) {
+  const releaseDate = EPISODE_RELEASES[charKey];
+  return releaseDate && new Date() >= releaseDate;
+}
+
+function autoUnlockCards() {
+  document.querySelectorAll('.char-card').forEach(card => {
+    let charKey = null;
+    if (card.classList.contains('manager')) charKey = 'manager';
+    else if (card.classList.contains('ceo')) charKey = 'ceo';
+    else return; // engineer is always unlocked
+
+    if (isReleased(charKey)) {
+      card.classList.remove('locked');
+      card.onclick = () => startStory(charKey);
+
+      // remove the lock badge if it still exists
+      const badge = card.querySelector('.lock-badge');
+      if (badge) badge.remove();
+    }
+  });
+}
+
+// Run it when the page loads
+window.addEventListener('load', autoUnlockCards);
+/* ==================================================================== */</script>
 
 </body>
 </html>
