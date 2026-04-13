@@ -907,18 +907,22 @@
     document.getElementById('storyTitle').innerHTML = char.title;
     document.getElementById('storyEp').textContent = char.episode;
 
-    const nextLabel = charKey === 'engineer'
-? '#&9632; Episode 2 — THE TURNAROUND MANAGER — Now Available &#9632;'
-: charKey === 'manager'
-? '#&9632; Episode 3 — THE GENERAL MANAGER — drops next Monday &#9632;'
-: '#&9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
+    let nextLabel;
 
-   document.getElementById('storyContent').innerHTML = `
+if (charKey === 'engineer') {
+  nextLabel = '■ Episode 2 — THE TURNAROUND MANAGER — Now Available ■';
+} else if (charKey === 'manager') {
+  nextLabel = '■ Episode 3 — THE GENERAL MANAGER — drops next Monday ■';
+} else {
+  nextLabel = '■ Episode 3 — THE CONVERGENCE — all three paths collide — coming soon ■';
+}
+
+  document.getElementById('storyContent').innerHTML = `
   <div class="story-body">
     ${char.story}
   </div>
   <div class="cliffhanger">
-    <div class="cliff-label">↳ To Be Continued ↳</div>
+   <div class="cliff-label">To Be Continued</div>
     <div class="cliff-text">${char.cliffhanger}</div>
     <div class="cliff-next">${nextLabel}</div>
   </div>
