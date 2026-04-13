@@ -850,29 +850,9 @@
 
 <p>His Legal Counsel was in Portugal, on annual leave that Marcus had approved in writing six weeks prior. His Operations Superintendent was at a remote site in the northern region and was not, in Marcus's current assessment of the situation, someone he could call at eleven fifty at night with a question that was also, structurally, an accusation. The group's Chief Risk Officer had sent a calendar invitation for a quarterly review in three weeks, which now had the quality of a message from a different world entirely.</p>
 
-<p><p>We had the chemistry wrong. And we had the data siloed. Both had to change.</p>
-
-<p>The chemistry could have been different. The data architecture could have been better. The outcome would have been too.</p>
-
-<p>But three thousand kilometers away... at a different kind of facility... with cutting-edge technology and advanced manufacturing systems...</p>
-
-<p>The data was still siloed. The chemistry was still wrong. And nobody was asking the right questions yet.</p>
-
-■ ■ ■
-
-<p class="end-card">THE CHEMICAL TRUTH - SEASON 1 COMPLETE</p>
-
-<p class="end-card">Marcus learned two lessons: safer chemistry, connected data.</p>
-
-<p class="end-card-small">Based on documented industrial incidents</p>
-
----
-
-<p class="end-card">SEASON 2: THE NEW FACILITY</p>
-
-<p class="end-card">Deni Cole has been keeping a personal log for seven months.<br>Nobody has asked to see it yet.</p>
-
-<p class="end-card-emphasis">COMING SOON</p>
+<p>Marcus closed the document. He looked at the framed values statement on the wall opposite his desk, which had been installed by his predecessor and which he had never replaced, partly from inertia and partly because the values it described — <em>Integrity. Accountability. Care.</em> — had seemed, until approximately four days ago, broadly representative of his intentions.</p>`,
+    }
+  };
 
   let currentCharacter = null;
 
@@ -882,7 +862,7 @@
     notice.style.opacity = '1';
     notice.style.background = 'rgba(232,160,32,0.12)';
     notice.style.transition = 'background 0.6s ease';
-    setTimeout(() => { notice.style.background = 'rgba(232,160,32,0.04)'; }, 800); 
+    setTimeout(() => { notice.style.background = 'rgba(232,160,32,0.04)'; }, 800);
   }
 
   function setStoryColor(color) {
@@ -907,29 +887,25 @@
     document.getElementById('storyTitle').innerHTML = char.title;
     document.getElementById('storyEp').textContent = char.episode;
 
-    let nextLabel;
+    const nextLabel = charKey === 'engineer'
+? '#&9632; Episode 2 — THE TURNAROUND MANAGER — Now Available &#9632;'
+: charKey === 'manager'
+? '#&9632; Episode 3 — THE GENERAL MANAGER — drops next Monday &#9632;'
+: '#&9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
 
-if (charKey === 'engineer') {
- nextLabel = 'Episode 2 - THE TURNAROUND MANAGER - Now Available';
-} else if (charKey === 'manager') {
-nextLabel = 'Episode 3 - THE GENERAL MANAGER - drops next Monday';
-} else {
-  nextLabel = 'Episode 3 - THE CONVERGENCE - all three paths collide - coming soon';
-}
-
-  document.getElementById('storyContent').innerHTML = `
-  <div class="story-body">
-    ${char.story}
-  </div>
-  <div class="cliffhanger">
-   <div class="cliff-label">To Be Continued</div>
-    <div class="cliff-text">${char.cliffhanger}</div>
-    <div class="cliff-next">${nextLabel}</div>
-  </div>
-`;
+    document.getElementById('storyContent').innerHTML = `
+      <div class="story-body">
+        ${char.story}
+      </div>
+      <div class="cliffhanger">
+        <div class="cliff-label">&#9632; To Be Continued &#9632;</div>
+        <div class="cliff-text">${char.cliffhanger}</div>
+        <div class="cliff-next">${nextLabel}</div>
+      </div>
+    `;
   }
 
- 
+  document.getElementById('story').style.display = 'none';
 /* ====================== AUTOMATIC WEEKLY UNLOCK ====================== */
 const EPISODE_RELEASES = {
   engineer: new Date('2026-03-30'),   // Week 1 — already live
