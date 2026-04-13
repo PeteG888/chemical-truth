@@ -6,586 +6,629 @@
 <title>The Chemical Truth — An Industrial Fiction</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black: #080808;
-    --dark: #0f0f0f;
-    --panel: #141414;
-    --border: #2a2a2a;
-    --amber: #e8a020;
-    --amber-dim: #7a4a05;
-    --red: #c0392b;
-    --red-dim: #5a1a12;
-    --blue: #2980b9;
-    --blue-dim: #0d3a5a;
-    --green: #27ae60;
-    --text: #d4cfc8;
-    --text-dim: #7a7570;
-    --white: #f0ece5;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'Barlow', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
-
-  /* SCREENS */
-  .screen { display: none; animation: fadeIn 0.8s ease; }
-  .screen.active { display: flex; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== INTRO SCREEN ===== */
-  #intro {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    position: relative;
-  }
-
-  .warning-bar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--amber) 0px, var(--amber) 24px,
-      var(--black) 24px, var(--black) 48px
-    );
-    height: 4px;
-    z-index: 100;
-  }
-
-  .intro-tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    color: var(--amber);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.3s forwards;
-  }
-
-  .intro-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 7rem);
-    font-weight: 900;
-    color: var(--white);
-    text-align: center;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.5s forwards;
-  }
-
-  .intro-title em {
-    font-style: italic;
-    color: var(--amber);
-  }
-
-  .intro-subtitle {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: clamp(1rem, 2.5vw, 1.4rem);
-    color: var(--text-dim);
-    text-align: center;
-    margin-top: 16px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.8s forwards;
-  }
-
-  .divider {
-    width: 80px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--amber), transparent);
-    margin: 40px auto;
-    opacity: 0;
-    animation: fadeIn 1s ease 1s forwards;
-  }
-
-  .intro-premise {
-    max-width: 640px;
-    text-align: center;
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: var(--text);
-    font-weight: 300;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.2s forwards;
-  }
-
-  .intro-premise strong {
-    color: var(--white);
-    font-weight: 500;
-  }
-
-  .choose-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-top: 56px;
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.5s forwards;
-  }
-
-  /* CHARACTER CARDS */
-  .character-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2px;
-    max-width: 960px;
-    width: 100%;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.7s forwards;
-  }
-
-  .char-card {
-    position: relative;
-    padding: 40px 32px;
-    cursor: pointer;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-
-  .char-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .char-card.engineer::before { background: linear-gradient(135deg, rgba(232,160,32,0.08), transparent); }
-  .char-card.manager::before { background: linear-gradient(135deg, rgba(192,57,43,0.08), transparent); }
-  .char-card.ceo::before { background: linear-gradient(135deg, rgba(41,128,185,0.08), transparent); }
-
-  .char-card:hover::before { opacity: 1; }
-
-  .char-card:hover {
-    border-color: var(--char-color, var(--amber));
-    transform: translateY(-3px);
-  }
-
-  .char-card.engineer { --char-color: var(--amber); }
-  .char-card.manager { --char-color: var(--red); }
-  .char-card.ceo { --char-color: var(--blue); }
-
-  .char-card:hover .char-number { opacity: 1; }
-
-  .char-number {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--char-color);
-    opacity: 0.4;
-    margin-bottom: 20px;
-    transition: opacity 0.3s;
-  }
-
-  .char-role {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--char-color);
-    margin-bottom: 12px;
-  }
-
-  .char-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 16px;
-    line-height: 1.2;
-  }
-
-  .char-hook {
-    font-size: 0.9rem;
-    line-height: 1.7;
-    color: var(--text-dim);
-    font-style: italic;
-  }
-
-  .char-arrow {
-    position: absolute;
-    bottom: 24px;
-    right: 28px;
-    font-size: 1.2rem;
-    color: var(--char-color);
-    opacity: 0;
-    transform: translateX(-8px);
-    transition: all 0.3s ease;
-  }
-
-  .char-card:hover .char-arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  /* LOCKED CARDS */
-  .char-card.locked {
-    opacity: 0.45;
-    cursor: not-allowed;
-    filter: grayscale(0.6);
-  }
-
-  .char-card.locked:hover {
-    transform: none;
-    border-color: var(--border);
-    opacity: 0.55;
-  }
-
-  .char-card.locked::before { display: none; }
-
-  .lock-badge {
-    display: inline-block;
-    margin-top: 16px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    padding: 5px 12px;
-  }
-
-  /* UNLOCK NOTICE */
-  .unlock-notice {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    color: var(--amber);
-    text-align: center;
-    margin-top: 32px;
-    margin-bottom: 8px;
-    padding: 14px 28px;
-    border: 1px solid var(--amber-dim);
-    background: rgba(232,160,32,0.04);
-    max-width: 640px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.4s forwards;
-  }
-
-  .fiction-note {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-align: center;
-    margin-top: 40px;
-    opacity: 0;
-    animation: fadeIn 1s ease 2s forwards;
-  }
-
-  /* ===== STORY SCREEN ===== */
-  #story {
-    min-height: 100vh;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 80px 48px 120px;
-  }
-
-  .story-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 48px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .story-role-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--story-color);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--story-color);
-    padding: 6px 14px;
-    white-space: nowrap;
-    margin-top: 4px;
-  }
-
-  .story-meta { flex: 1; }
-
-  .story-ep {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-  }
-
-  .story-title-display {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1.2;
-  }
-
-  .story-title-display em {
-    font-style: italic;
-    color: var(--story-color);
-  }
-
-  /* Loading state */
-  .loading-container {
-    padding: 60px 0;
-    text-align: center;
-  }
-
-  .loading-bars {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 24px;
-  }
-
-  .loading-bar {
-    width: 3px;
-    height: 32px;
-    background: var(--story-color, var(--amber));
-    animation: barPulse 1.2s ease-in-out infinite;
-  }
-
-  .loading-bar:nth-child(2) { animation-delay: 0.15s; }
-  .loading-bar:nth-child(3) { animation-delay: 0.3s; }
-  .loading-bar:nth-child(4) { animation-delay: 0.45s; }
-  .loading-bar:nth-child(5) { animation-delay: 0.6s; }
-
-  @keyframes barPulse {
-    0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
-    50% { transform: scaleY(1); opacity: 1; }
-  }
-
-  .loading-text {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  /* Story text */
-  .story-body {
-    font-size: 1.05rem;
-    line-height: 1.9;
-    color: var(--text);
-  }
-
-  .story-body p {
-    margin-bottom: 1.6em;
-  }
-
-  .story-body p:first-child::first-letter {
-    font-family: 'Playfair Display', serif;
-    font-size: 4em;
-    font-weight: 900;
-    float: left;
-    line-height: 0.75;
-    margin: 0.08em 0.1em 0 0;
-    color: var(--story-color);
-  }
-
-  .story-body strong {
-    color: var(--white);
-    font-weight: 500;
-  }
-
-  .story-body em {
-    color: var(--story-color);
-    font-style: italic;
-  }
-
-  /* Voice labels */
-  .voice-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    color: #e8a020;
-    text-transform: uppercase;
-    margin: 32px 0 6px 0;
-    opacity: 0.85;
-  }
-
-  .voice-label + p {
-    margin-top: 0;
-    padding-left: 14px;
-    border-left: 2px solid rgba(232,160,32,0.2);
-  }
-
-  /* Scene titles */
-  .scene-title {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: #555555;
-    text-transform: uppercase;
-    margin: 40px 0 16px 0;
-    padding-top: 16px;
-    border-top: 1px solid #2a2a2a;
-  }
-
-  /* Cliffhanger */
-  .cliffhanger {
-    margin-top: 64px;
-    padding: 40px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cliffhanger::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--story-color);
-  }
-
-  .cliff-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    color: var(--story-color);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-
-  .cliff-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    font-style: italic;
-    color: var(--white);
-    line-height: 1.6;
-    margin-bottom: 32px;
-  }
-
-  .cliff-next {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--story-color);
-    border: 1px solid var(--story-color);
-    display: inline-block;
-    padding: 10px 20px;
-    opacity: 0.8;
-  }
-
-  .cliff-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--story-color);
-    color: var(--black);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 14px 28px;
-    cursor: pointer;
-    border: none;
-    font-weight: 700;
-    transition: all 0.2s ease;
-    text-decoration: none;
-  }
-
-  .cliff-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
-
-  .story-nav {
-    margin-top: 48px;
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .nav-btn {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 12px 24px;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .nav-btn:hover {
-    border-color: var(--text);
-    color: var(--white);
-  }
-
-  /* Data pulse decoration */
-  .data-stream {
-    position: fixed;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    opacity: 0.15;
-    pointer-events: none;
-  }
-
-  .data-line {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.5rem;
-    color: var(--amber);
-    animation: dataPulse 3s ease-in-out infinite;
-  }
-
-  .data-line:nth-child(2) { animation-delay: 0.5s; }
-  .data-line:nth-child(3) { animation-delay: 1s; }
-  .data-line:nth-child(4) { animation-delay: 1.5s; }
-
-  @keyframes dataPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-  }
-
-  @media (max-width: 600px) {
-    .character-grid { grid-template-columns: 1fr; }
-    #story { padding: 60px 20px 80px; }
-    .story-header { flex-direction: column; }
-    .cliffhanger { padding: 28px 24px; }
-    .data-stream { display: none; }
-  }
+:root {
+--black: #080808;
+--dark: #0f0f0f;
+--panel: #141414;
+--border: #2a2a2a;
+--amber: #e8a020;
+--amber-dim: #7a4a05;
+--red: #c0392b;
+--red-dim: #5a1a12;
+--blue: #2980b9;
+--blue-dim: #0d3a5a;
+--green: #27ae60;
+--text: #d4cfc8;
+--text-dim: #7a7570;
+--white: #f0ece5;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(--black);
+color: var(--text);
+font-family: 'Barlow', sans-serif;
+font-weight: 300;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* NOISE OVERLAY */
+body::before {
+content: '';
+position: fixed;
+inset: 0;
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+pointer-events: none;
+z-index: 1000;
+opacity: 0.4;
+}
+
+/* SCREENS */
+.screen { display: none; animation: fadeIn 0.8s ease; }
+.screen.active { display: flex; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== INTRO SCREEN ===== */
+#intro {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 40px 20px;
+position: relative;
+}
+
+.warning-bar {
+position: fixed;
+top: 0; left: 0; right: 0;
+background: repeating-linear-gradient(
+90deg,
+var(--amber) 0px, var(--amber) 24px,
+var(--black) 24px, var(--black) 48px
+);
+height: 4px;
+z-index: 100;
+}
+
+.intro-tag {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.25em;
+color: var(--amber);
+text-transform: uppercase;
+margin-bottom: 32px;
+opacity: 0;
+animation: fadeIn 1s ease 0.3s forwards;
+}
+
+.intro-title {
+font-family: 'Playfair Display', serif;
+font-size: clamp(3rem, 8vw, 7rem);
+font-weight: 900;
+color: var(--white);
+text-align: center;
+line-height: 0.95;
+letter-spacing: -0.02em;
+opacity: 0;
+animation: fadeIn 1s ease 0.5s forwards;
+}
+
+.intro-title em {
+font-style: italic;
+color: var(--amber);
+}
+
+.intro-subtitle {
+font-family: 'Playfair Display', serif;
+font-style: italic;
+font-size: clamp(1rem, 2.5vw, 1.4rem);
+color: var(--text-dim);
+text-align: center;
+margin-top: 16px;
+opacity: 0;
+animation: fadeIn 1s ease 0.8s forwards;
+}
+
+.divider {
+width: 80px;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--amber), transparent);
+margin: 40px auto;
+opacity: 0;
+animation: fadeIn 1s ease 1s forwards;
+}
+
+.intro-premise {
+max-width: 640px;
+text-align: center;
+font-size: 1.05rem;
+line-height: 1.8;
+color: var(--text);
+font-weight: 300;
+opacity: 0;
+animation: fadeIn 1s ease 1.2s forwards;
+}
+
+.intro-premise strong {
+color: var(--white);
+font-weight: 500;
+}
+
+.choose-label {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.3em;
+color: var(--text-dim);
+text-transform: uppercase;
+margin-top: 56px;
+margin-bottom: 28px;
+opacity: 0;
+animation: fadeIn 1s ease 1.5s forwards;
+}
+
+/* CHARACTER CARDS */
+.character-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 2px;
+max-width: 960px;
+width: 100%;
+opacity: 0;
+animation: fadeIn 1s ease 1.7s forwards;
+}
+
+.char-card {
+position: relative;
+padding: 40px 32px;
+cursor: pointer;
+background: var(--panel);
+border: 1px solid var(--border);
+transition: all 0.3s ease;
+overflow: hidden;
+}
+
+.char-card::before {
+content: '';
+position: absolute;
+inset: 0;
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+
+.char-card.engineer::before { background: linear-gradient(135deg, rgba(232,160,32,0.08), transparent); }
+.char-card.manager::before { background: linear-gradient(135deg, rgba(192,57,43,0.08), transparent); }
+.char-card.ceo::before { background: linear-gradient(135deg, rgba(41,128,185,0.08), transparent); }
+
+.char-card:hover::before { opacity: 1; }
+
+.char-card:hover {
+border-color: var(--char-color, var(--amber));
+transform: translateY(-3px);
+}
+
+.char-card.engineer { --char-color: var(--amber); }
+.char-card.manager { --char-color: var(--red); }
+.char-card.ceo { --char-color: var(--blue); }
+
+.char-card:hover .char-number { opacity: 1; }
+
+.char-number {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.2em;
+color: var(--char-color);
+opacity: 0.4;
+margin-bottom: 20px;
+transition: opacity 0.3s;
+}
+
+.char-role {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--char-color);
+margin-bottom: 12px;
+}
+
+.char-name {
+font-family: 'Playfair Display', serif;
+font-size: 1.6rem;
+font-weight: 700;
+color: var(--white);
+margin-bottom: 16px;
+line-height: 1.2;
+}
+
+.char-hook {
+font-size: 0.9rem;
+line-height: 1.7;
+color: var(--text-dim);
+font-style: italic;
+}
+
+.char-arrow {
+position: absolute;
+bottom: 24px;
+right: 28px;
+font-size: 1.2rem;
+color: var(--char-color);
+opacity: 0;
+transform: translateX(-8px);
+transition: all 0.3s ease;
+}
+
+.char-card:hover .char-arrow {
+opacity: 1;
+transform: translateX(0);
+}
+
+/* LOCKED CARDS */
+.char-card.locked {
+opacity: 0.45;
+cursor: not-allowed;
+filter: grayscale(0.6);
+}
+
+.char-card.locked:hover {
+transform: none;
+border-color: var(--border);
+opacity: 0.55;
+}
+
+.char-card.locked::before { display: none; }
+
+.lock-badge {
+display: inline-block;
+margin-top: 16px;
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.2em;
+color: var(--text-dim);
+border: 1px solid var(--border);
+padding: 5px 12px;
+}
+
+/* UNLOCK NOTICE */
+.unlock-notice {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.18em;
+color: var(--amber);
+text-align: center;
+margin-top: 32px;
+margin-bottom: 8px;
+padding: 14px 28px;
+border: 1px solid var(--amber-dim);
+background: rgba(232,160,32,0.04);
+max-width: 640px;
+opacity: 0;
+animation: fadeIn 1s ease 1.4s forwards;
+}
+
+.fiction-note {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.15em;
+color: var(--text-dim);
+text-align: center;
+margin-top: 40px;
+opacity: 0;
+animation: fadeIn 1s ease 2s forwards;
+}
+
+/* ===== STORY SCREEN ===== */
+#story {
+min-height: 100vh;
+max-width: 1100px;
+margin: 0 auto;
+padding: 80px 48px 120px;
+}
+
+.story-header {
+display: flex;
+align-items: flex-start;
+gap: 20px;
+margin-bottom: 48px;
+padding-bottom: 32px;
+border-bottom: 1px solid var(--border);
+}
+
+.story-role-badge {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--story-color);
+background: rgba(255,255,255,0.04);
+border: 1px solid var(--story-color);
+padding: 6px 14px;
+white-space: nowrap;
+margin-top: 4px;
+}
+
+.story-meta { flex: 1; }
+
+.story-ep {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.2em;
+color: var(--text-dim);
+margin-bottom: 8px;
+}
+
+.story-title-display {
+font-family: 'Playfair Display', serif;
+font-size: clamp(1.6rem, 4vw, 2.4rem);
+font-weight: 700;
+color: var(--white);
+line-height: 1.2;
+}
+
+.story-title-display em {
+font-style: italic;
+color: var(--story-color);
+}
+
+/* Loading state */
+.loading-container {
+padding: 60px 0;
+text-align: center;
+}
+
+.loading-bars {
+display: flex;
+justify-content: center;
+gap: 6px;
+margin-bottom: 24px;
+}
+
+.loading-bar {
+width: 3px;
+height: 32px;
+background: var(--story-color, var(--amber));
+animation: barPulse 1.2s ease-in-out infinite;
+}
+
+.loading-bar:nth-child(2) { animation-delay: 0.15s; }
+.loading-bar:nth-child(3) { animation-delay: 0.3s; }
+.loading-bar:nth-child(4) { animation-delay: 0.45s; }
+.loading-bar:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes barPulse {
+0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
+50% { transform: scaleY(1); opacity: 1; }
+}
+
+.loading-text {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.2em;
+color: var(--text-dim);
+text-transform: uppercase;
+}
+
+/* Story text */
+.story-body {
+font-size: 1.05rem;
+line-height: 1.9;
+color: var(--text);
+}
+
+.story-body p {
+margin-bottom: 1.6em;
+}
+
+.story-body p:first-child::first-letter {
+font-family: 'Playfair Display', serif;
+font-size: 4em;
+font-weight: 900;
+float: left;
+line-height: 0.75;
+margin: 0.08em 0.1em 0 0;
+color: var(--story-color);
+}
+
+.story-body strong {
+color: var(--white);
+font-weight: 500;
+}
+
+.story-body em {
+color: var(--story-color);
+font-style: italic;
+}
+
+/* Voice labels */
+.voice-label {
+font-family: 'Share Tech Mono', monospace;
+font-size: 11px;
+letter-spacing: 0.25em;
+color: #e8a020;
+text-transform: uppercase;
+margin: 32px 0 6px 0;
+opacity: 0.85;
+}
+
+.voice-label + p {
+margin-top: 0;
+padding-left: 14px;
+border-left: 2px solid rgba(232,160,32,0.2);
+}
+
+/* Scene titles */
+.scene-title {
+font-family: 'Share Tech Mono', monospace;
+font-size: 10px;
+letter-spacing: 0.3em;
+color: #555555;
+text-transform: uppercase;
+margin: 40px 0 16px 0;
+padding-top: 16px;
+border-top: 1px solid #2a2a2a;
+}
+
+/* Cliffhanger */
+.cliffhanger {
+margin-top: 64px;
+padding: 40px;
+border: 1px solid var(--border);
+background: var(--panel);
+position: relative;
+overflow: hidden;
+}
+
+.cliffhanger::before {
+content: '';
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 2px;
+background: var(--story-color);
+}
+
+.cliff-label {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.3em;
+color: var(--story-color);
+text-transform: uppercase;
+margin-bottom: 16px;
+}
+
+.cliff-text {
+font-family: 'Playfair Display', serif;
+font-size: 1.3rem;
+font-style: italic;
+color: var(--white);
+line-height: 1.6;
+margin-bottom: 32px;
+}
+
+.cliff-next {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.2em;
+color: var(--story-color);
+border: 1px solid var(--story-color);
+display: inline-block;
+padding: 10px 20px;
+opacity: 0.8;
+}
+
+.cliff-cta {
+display: inline-flex;
+align-items: center;
+gap: 12px;
+background: var(--story-color);
+color: var(--black);
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+padding: 14px 28px;
+cursor: pointer;
+border: none;
+font-weight: 700;
+transition: all 0.2s ease;
+text-decoration: none;
+}
+
+.cliff-cta:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Season divider */
+.season-divider {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.4em;
+color: var(--text-dim);
+text-align: center;
+margin: 28px 0;
+}
+
+/* Season 2 teaser block */
+.season2-teaser {
+margin-top: 32px;
+padding-top: 32px;
+border-top: 1px solid var(--border);
+}
+
+.season2-label {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.3em;
+color: var(--blue);
+text-transform: uppercase;
+margin-bottom: 14px;
+}
+
+.season2-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--white);
+margin-bottom: 12px;
+}
+
+.season2-hook {
+font-family: 'Playfair Display', serif;
+font-style: italic;
+font-size: 1.05rem;
+color: var(--text);
+line-height: 1.7;
+margin-bottom: 24px;
+}
+
+.story-nav {
+margin-top: 48px;
+display: flex;
+gap: 16px;
+flex-wrap: wrap;
+}
+
+.nav-btn {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+padding: 12px 24px;
+background: transparent;
+border: 1px solid var(--border);
+color: var(--text-dim);
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+border-color: var(--text);
+color: var(--white);
+}
+
+/* Data pulse decoration */
+.data-stream {
+position: fixed;
+right: 20px;
+top: 50%;
+transform: translateY(-50%);
+display: flex;
+flex-direction: column;
+gap: 8px;
+opacity: 0.15;
+pointer-events: none;
+}
+
+.data-line {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.5rem;
+color: var(--amber);
+animation: dataPulse 3s ease-in-out infinite;
+}
+
+.data-line:nth-child(2) { animation-delay: 0.5s; }
+.data-line:nth-child(3) { animation-delay: 1s; }
+.data-line:nth-child(4) { animation-delay: 1.5s; }
+
+@keyframes dataPulse {
+0%, 100% { opacity: 0.3; }
+50% { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+.character-grid { grid-template-columns: 1fr; }
+#story { padding: 60px 20px 80px; }
+.story-header { flex-direction: column; }
+.cliffhanger { padding: 28px 24px; }
+.data-stream { display: none; }
+}
 </style>
 </head>
 <body>
@@ -593,104 +636,99 @@
 <div class="warning-bar"></div>
 
 <div class="data-stream">
-  <div class="data-line">H2S: 4.2ppm</div>
-  <div class="data-line">TEMP: 847°C</div>
-  <div class="data-line">PRESS: 142bar</div>
-  <div class="data-line">DAY: 47/60</div>
+<div class="data-line">H2S: 4.2ppm</div>
+<div class="data-line">TEMP: 847°C</div>
+<div class="data-line">PRESS: 142bar</div>
+<div class="data-line">DAY: 47/60</div>
 </div>
 
 <!-- INTRO SCREEN -->
 <div id="intro" class="screen active">
-  <div class="intro-tag">&#9632; An Industrial Fiction Series &#9632; Episode One</div>
+<div class="intro-tag">&#9632; An Industrial Fiction Series &#9632; Episode One</div>
+<h1 class="intro-title">The<br><em>Chemical</em><br>Truth</h1>
+<p class="intro-subtitle">Three lives. One crisis. No easy answers.</p>
+<div class="divider"></div>
+<p class="intro-premise">
+Somewhere in the world right now, a shutdown is running behind schedule.<br>
+Someone is breathing something they shouldn't.<br>
+Someone is hiding a report.<br>
+Someone is about to lose everything.<br><br>
+<strong>Is this fiction? The chemicals are real. The consequences are real.<br>
+The solution exists — but first, you have to feel the problem.</strong>
+</p>
 
-  <h1 class="intro-title">The<br><em>Chemical</em><br>Truth</h1>
-  <p class="intro-subtitle">Three lives. One crisis. No easy answers.</p>
-
-  <div class="divider"></div>
-
-  <p class="intro-premise">
-    Somewhere in the world right now, a shutdown is running behind schedule.<br>
-    Someone is breathing something they shouldn't.<br>
-    Someone is hiding a report.<br>
-    Someone is about to lose everything.<br><br>
-    <strong>Is this fiction? The chemicals are real. The consequences are real.<br>
-    The solution exists — but first, you have to feel the problem.</strong>
-  </p>
-
-  <div class="unlock-notice">
-    &#9632; Each week a new path unlocks. Follow one, follow all three — or wait for the convergence. &#9632;
-  </div>
-
-  <p class="choose-label">&#9632; Choose your path &#9632;</p>
-
-  <div class="character-grid">
-
-    <div class="char-card engineer" onclick="startStory('engineer')">
-      <div class="char-number">PATH 01 / 03 — WEEK 1</div>
-      <div class="char-role">&#9632; The Engineer</div>
-      <div class="char-name">The Smell<br>Nobody<br>Talks About</div>
-      <div class="char-hook">"Day 47 of the shutdown. The heat exchanger bundle smelled like something slowly expiring. The monitor said the air was safe. It wasn't measuring the right thing..."</div>
-      <div class="char-arrow">→</div>
-    </div>
-
-    <div class="char-card manager" onclick="startStory('manager')">
-  <div class="char-number">PATH 02 / 03 — WEEK 2</div>
-  <div class="char-role">&#9632; The Turnaround Manager</div>
-  <div class="char-name">The Call<br>at<br>3am</div>
-  <div class="char-hook">"Thirty-seven days to restart. That's what the board believed. Nolan knew the real number was closer to fifty-two..."</div>
-  <div class="char-arrow">→</div>
+<div class="unlock-notice">
+&#9632; Each week a new path unlocks. Follow one, follow all three — or wait for the convergence. &#9632;
 </div>
 
-   <div class="char-card ceo" onclick="startStory('ceo')">
-  <div class="char-number">PATH 03 / 03 — WEEK 3</div>
-  <div class="char-role">&#9632; The General Manager</div>
-  <div class="char-name">The Document<br>He Wasn't<br>Supposed to See</div>
-  <div class="char-hook">"It was a single paragraph buried in an environmental audit from three years ago. Someone had filed it incorrectly — or perhaps deliberately..."</div>
-  <div class="char-arrow">→</div>
+<p class="choose-label">&#9632; Choose your path &#9632;</p>
+
+<div class="character-grid">
+<div class="char-card engineer" onclick="startStory('engineer')">
+<div class="char-number">PATH 01 / 03 — WEEK 1</div>
+<div class="char-role">&#9632; The Engineer</div>
+<div class="char-name">The Smell<br>Nobody<br>Talks About</div>
+<div class="char-hook">"Day 47 of the shutdown. The heat exchanger bundle smelled like something slowly expiring. The monitor said the air was safe. It wasn't measuring the right thing..."</div>
+<div class="char-arrow">→</div>
 </div>
 
-  </div>
+<div class="char-card manager" onclick="startStory('manager')">
+<div class="char-number">PATH 02 / 03 — WEEK 2</div>
+<div class="char-role">&#9632; The Turnaround Manager</div>
+<div class="char-name">The Call<br>at<br>3am</div>
+<div class="char-hook">"Thirty-seven days to restart. That's what the board believed. Nolan knew the real number was closer to fifty-two..."</div>
+<div class="char-arrow">→</div>
+</div>
 
-  <p class="fiction-note">&#9632; Is this fiction? &#9632; All chemical data is accurate &#9632; You decide &#9632;</p>
+<div class="char-card ceo" onclick="startStory('ceo')">
+<div class="char-number">PATH 03 / 03 — WEEK 3</div>
+<div class="char-role">&#9632; The General Manager</div>
+<div class="char-name">The Document<br>He Wasn't<br>Supposed to See</div>
+<div class="char-hook">"It was a single paragraph buried in an environmental audit from three years ago. Someone had filed it incorrectly — or perhaps deliberately..."</div>
+<div class="char-arrow">→</div>
+</div>
+</div>
+
+<p class="fiction-note">&#9632; Is this fiction? &#9632; All chemical data is accurate &#9632; You decide &#9632;</p>
 </div>
 
 <!-- STORY SCREEN -->
 <div id="story" class="screen">
-  <div class="story-header">
-    <div class="story-role-badge" id="storyBadge">THE ENGINEER</div>
-    <div class="story-meta">
-      <div class="story-ep" id="storyEp">EPISODE 01 — THE CHEMICAL TRUTH</div>
-      <div class="story-title-display" id="storyTitle">Loading...</div>
-    </div>
-  </div>
+<div class="story-header">
+<div class="story-role-badge" id="storyBadge">THE ENGINEER</div>
+<div class="story-meta">
+<div class="story-ep" id="storyEp">EPISODE 01 — THE CHEMICAL TRUTH</div>
+<div class="story-title-display" id="storyTitle">Loading...</div>
+</div>
+</div>
 
-  <div id="storyContent">
-    <div class="loading-container">
-      <div class="loading-bars">
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-      </div>
-      <div class="loading-text">Generating story...</div>
-    </div>
-  </div>
+<div id="storyContent">
+<div class="loading-container">
+<div class="loading-bars">
+<div class="loading-bar"></div>
+<div class="loading-bar"></div>
+<div class="loading-bar"></div>
+<div class="loading-bar"></div>
+<div class="loading-bar"></div>
+</div>
+<div class="loading-text">Generating story...</div>
+</div>
+</div>
 
-  <div class="story-nav">
-    <button class="nav-btn" onclick="backToIntro()">← Choose Different Path</button>
-  </div>
+<div class="story-nav">
+<button class="nav-btn" onclick="backToIntro()">← Choose Different Path</button>
+</div>
 </div>
 
 <script>
-  const characters = {
-    engineer: {
-      role: 'REN CALLARD — THE JUNIOR ENGINEER',
-      title: 'The Smell Nobody <em>Talks About</em>',
-      color: '#e8a020',
-      episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
-      cliffhanger: 'The LEL monitor ticked to 8.6%. The entry permit was clipped to the access ladder. Ren reached for it — and stopped. The atmospheric reading recorded at 06:00 that morning was 4.1%. It was now 09:23. The LEL was climbing, but the paperwork said everything was fine. At a glance the signature in the authorising officer field looked like his… but something about it felt off. He couldn\'t place it. Not yet. The fog wasn\'t just in the heat exchanger anymore… it was in his head. To be continued… Episode 2 — The Turnaround Manager — drops next Monday.',
-      story: `
+const characters = {
+engineer: {
+role: 'REN CALLARD — THE JUNIOR ENGINEER',
+title: 'The Smell Nobody <em>Talks About</em>',
+color: '#e8a020',
+episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
+cliffhanger: 'The LEL monitor ticked to 8.6%. The entry permit was clipped to the access ladder. Ren reached for it — and stopped. The atmospheric reading recorded at 06:00 that morning was 4.1%. It was now 09:23. The LEL was climbing, but the paperwork said everything was fine. At a glance the signature in the authorising officer field looked like his… but something about it felt off. He couldn\'t place it. Not yet. The fog wasn\'t just in the heat exchanger anymore… it was in his head. To be continued… Episode 2 — The Turnaround Manager — drops next Monday.',
+story: `
 <p class="voice-label">NARRATOR</p>
 <p>Day 47 of the shutdown… and the heat exchanger bundle smelled like something that had been slowly expiring inside a chemical drum for the better part of a decade. Which was, as it happened… a reasonably accurate description of its contents.</p>
 
@@ -726,23 +764,27 @@
 
 <p class="voice-label">NARRATOR</p>
 <p>The LEL monitor ticked to 8.6%.</p>`,
-    },
-    manager: {
-      role: 'NOLAN BENNETT — THE TURNAROUND MANAGER',
-      title: 'The Call at <em>3am</em>',
-      color: '#c0392b',
-      episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
-      cliffhanger: 'The readings were dated across the last four turnarounds. The trend moved in one direction only. Nolan looked at the facility through the window. Somewhere out there — less than three hours from now — a man named Ren Callard would sign an entry permit for a confined space that smelled exactly like the solvent sitting in those one hundred and eighty drums. He didn\'t know that yet. To be continued… Episode 3 — The General Manager — drops next Monday.',
-      story: `
+},
+
+manager: {
+role: 'NOLAN BENNETT — THE TURNAROUND MANAGER',
+title: 'The Call at <em>3am</em>',
+color: '#c0392b',
+episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
+cliffhanger: 'The readings were dated across the last four turnarounds. The trend moved in one direction only. Nolan looked at the facility through the window. Somewhere out there — less than three hours from now — a man named Ren Callard would sign an entry permit for a confined space that smelled exactly like the solvent sitting in those one hundred and eighty drums. He didn\'t know that yet. To be continued… Episode 3 — The General Manager — drops next Monday.',
+story: `
 <p class="voice-label">NARRATOR</p>
 <p>Day 47 of the shutdown… 03:17am… Six hours before an engineer named Ren would enter a confined space and watch his colleague torque the same bolt three times.</p>
+
 <p>Nolan was already awake…</p>
 
 <p class="scene-title">— THE IMMINENT CALL</p>
 
 <p class="voice-label">NOLAN BENNETT — THE TURNAROUND MANAGER</p>
 <p>One hundred and eighty drums. Our bonded licence covers one hundred and fifty. The remaining thirty can't be released without compliant on-site storage.</p>
+
 <p>……We don't have it.</p>
+
 <p>……We can't build it before Monday.</p>
 
 <p class="voice-label">NARRATOR</p>
@@ -752,13 +794,16 @@
 
 <p class="voice-label">NOLAN BENNETT — THE TURNAROUND MANAGER</p>
 <p>Thirty-seven days. That's what the board believes. That's what exists in the presentations, the project system, the emails my regional director forwards upward with the kind of confidence that suggests he hasn't personally verified them.</p>
+
 <p>…..The number that exists only in my head is fifty-two.</p>
+
 <p>The gap between those two numbers is not a scheduling problem…..</p>
 
 <p class="scene-title">— THE LAPTOP REALISATION</p>
 
 <p class="voice-label">NARRATOR</p>
 <p>He opened the laptop. Seventy-four work packages. Fourteen disciplines. Eleven already amber. Valve overhaul and instrument cleaning — work packages thirty-one through thirty-eight — starts in nine days. The solvent flagged at customs was specified for that work. Not the heat exchanger circuit. Not the tank farm programme. The valve and instrument cleaning stream.</p>
+
 <p>The facility was running three solvent streams simultaneously across the turnaround. Different applications. Different work packages. Different supervisors. Nobody had looked at them together.</p>
 
 <p class="voice-label">NOLAN BENNETT — THE TURNAROUND MANAGER</p>
@@ -803,10 +848,15 @@
 
 <p class="voice-label">PRENTISS HAYES — THE SITE SAFETY OFFICER</p>
 <p>Nolan. The current solvent is approved on paper. But we are exceeding the exposure limit daily. Fifty parts per million is the legal threshold. We cleared that some time ago.</p>
+
 <p>The flash point is thirty-eight degrees. We are working in spaces that regularly exceed that ambient temperature.</p>
+
 <p>One shift too many and someone ends up in hospital. Or we lose the site to a fire incident.</p>
+
 <p>I need a multi-use, non-flammable alternative that delivers the same cleaning performance without the health complaints or the fire risk.</p>
+
 <p>I have attached the atmospheric monitoring data from the last four turnarounds.</p>
+
 <p>I have been waiting for someone to ask me this question for two turnarounds. I am not waiting any longer.</p>
 
 <p class="scene-title">— THE REALISATION CONFIRMED</p>
@@ -816,21 +866,29 @@
 
 <p class="voice-label">NARRATOR</p>
 <p>………This isn't four problems.</p>
+
 <p>The customs flag. The bonded licence. The work packages. The exposure readings climbing across four consecutive turnarounds. A safety officer who had been documenting all of it.</p>
+
 <p>…..not four problems indeed……One problem.(…)</p>
+
 <p>And it did not stop at this facility.</p>
+
 <p>(…)The readings were dated across the last four turnarounds. The trend moved in one direction only.</p>
+
 <p>Nolan looked at the facility through the window.</p>
+
 <p>Somewhere out there — less than three hours from now — a man named Ren Callard would sign an entry permit for a confined space that smelled exactly like the solvent sitting in those one hundred and eighty drums.</p>
+
 <p>He didn't know that yet.(…….)</p>`,
-    },
-    ceo: {
-      role: 'MARCUS RHODES — THE GENERAL MANAGER',
-      title: 'The Document He Wasn\'t <em>Supposed to See</em>',
-      color: '#2980b9',
-      episode: 'EPISODE 01 — THE CHEMICAL TRUTH',
-      cliffhanger: 'The data platform had a user access log. Marcus had looked at it once, four days ago, and closed it because what it showed required a composure he had not yet located. He opened it now. Three other users had accessed the document since the platform surfaced it. One of them was the group\'s regional environmental regulator liaison. The access timestamp read: this morning, 08:47. Marcus had been in a steering committee meeting at 08:47. He had presented the quarterly safety performance summary. The slide on chemical compliance had shown green across all indicators.',
-      story: `<p>Marcus had read it three times. The fourth time, he read the critical paragraph aloud — quietly, precisely, to no one — in the way that a man sometimes needs to hear a thing spoken before he can accept that it is real.</p>
+},
+
+ceo: {
+role: 'MARCUS RHODES — THE GENERAL MANAGER',
+title: 'The Document He Wasn\'t <em>Supposed to See</em>',
+color: '#2980b9',
+episode: 'EPISODE 03 — THE CHEMICAL TRUTH',
+cliffhanger: null,
+story: `<p>Marcus had read it three times. The fourth time, he read the critical paragraph aloud — quietly, precisely, to no one — in the way that a man sometimes needs to hear a thing spoken before he can accept that it is real.</p>
 
 <p>The document had surfaced four days ago through the group's newly implemented data integration platform — a system installed to connect the previously siloed asset databases across the organisation's global portfolio. Its stated purpose was operational visibility. It was performing that function with a thoroughness that had begun to feel less like technology and more like a particular variety of institutional conscience.</p>
 
@@ -850,96 +908,129 @@
 
 <p>His Legal Counsel was in Portugal, on annual leave that Marcus had approved in writing six weeks prior. His Operations Superintendent was at a remote site in the northern region and was not, in Marcus's current assessment of the situation, someone he could call at eleven fifty at night with a question that was also, structurally, an accusation. The group's Chief Risk Officer had sent a calendar invitation for a quarterly review in three weeks, which now had the quality of a message from a different world entirely.</p>
 
-<p>Marcus closed the document. He looked at the framed values statement on the wall opposite his desk, which had been installed by his predecessor and which he had never replaced, partly from inertia and partly because the values it described — <em>Integrity. Accountability. Care.</em> — had seemed, until approximately four days ago, broadly representative of his intentions.</p>`,
-    }
-  };
+<p>Marcus closed the document. He looked at the framed values statement on the wall opposite his desk, which had been installed by his predecessor and which he had never replaced, partly from inertia and partly because the values it described — <em>Integrity. Accountability. Care.</em> — had seemed, until approximately four days ago, broadly representative of his intentions.</p>
 
-  let currentCharacter = null;
+<p>The data platform had a user access log. Marcus had looked at it once, four days ago, and closed it because what it showed required a composure he had not yet located. He opened it now. Three other users had accessed the document since the platform surfaced it. One of them was the group's regional environmental regulator liaison. The access timestamp read: this morning, 08:47. Marcus had been in a steering committee meeting at 08:47. He had presented the quarterly safety performance summary. The slide on chemical compliance had shown green across all indicators.</p>
 
-  function showLocked() {
-    const notice = document.querySelector('.unlock-notice');
-    notice.style.animation = 'none';
-    notice.style.opacity = '1';
-    notice.style.background = 'rgba(232,160,32,0.12)';
-    notice.style.transition = 'background 0.6s ease';
-    setTimeout(() => { notice.style.background = 'rgba(232,160,32,0.04)'; }, 800);
-  }
+<p class="scene-title">— THE RESOLUTION</p>
 
-  function setStoryColor(color) {
-    document.documentElement.style.setProperty('--story-color', color);
-  }
+<p class="voice-label">MARCUS RHODES — THE GENERAL MANAGER</p>
+<p>We had the chemistry wrong. And we had the data siloed. Both had to change.</p>
 
-  function backToIntro() {
-    document.getElementById('story').style.display = 'none';
-    document.getElementById('intro').style.display = 'flex';
-  }
+<p class="voice-label">NARRATOR</p>
+<p>The chemistry could have been different. The data architecture could have been better. The outcome would have been too.</p>
 
-  function startStory(charKey) {
-    currentCharacter = charKey;
-    const char = characters[charKey];
-    setStoryColor(char.color);
+<p>But three thousand kilometers away... at a different kind of facility... with cutting-edge technology and advanced manufacturing systems...</p>
 
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('story').style.display = 'flex';
-    window.scrollTo(0, 0);
+<p>The data was still siloed. The chemistry was still wrong. And nobody was asking the right questions yet.</p>`,
+}
+};
 
-    document.getElementById('storyBadge').textContent = char.role;
-    document.getElementById('storyTitle').innerHTML = char.title;
-    document.getElementById('storyEp').textContent = char.episode;
+let currentCharacter = null;
 
-    const nextLabel = charKey === 'engineer'
-? '#&9632; Episode 2 — THE TURNAROUND MANAGER — Now Available &#9632;'
-: charKey === 'manager'
-? '#&9632; Episode 3 — THE GENERAL MANAGER — drops next Monday &#9632;'
-: '#&9632; Episode 3 — THE CONVERGENCE — all three paths collide — coming soon &#9632;';
+function showLocked() {
+const notice = document.querySelector('.unlock-notice');
+notice.style.animation = 'none';
+notice.style.opacity = '1';
+notice.style.background = 'rgba(232,160,32,0.12)';
+notice.style.transition = 'background 0.6s ease';
+setTimeout(() => { notice.style.background = 'rgba(232,160,32,0.04)'; }, 800);
+}
 
-    document.getElementById('storyContent').innerHTML = `
-      <div class="story-body">
-        ${char.story}
-      </div>
-      <div class="cliffhanger">
-        <div class="cliff-label">&#9632; To Be Continued &#9632;</div>
-        <div class="cliff-text">${char.cliffhanger}</div>
-        <div class="cliff-next">${nextLabel}</div>
-      </div>
-    `;
-  }
+function setStoryColor(color) {
+document.documentElement.style.setProperty('--story-color', color);
+}
 
-  document.getElementById('story').style.display = 'none';
+function backToIntro() {
+document.getElementById('story').style.display = 'none';
+document.getElementById('intro').style.display = 'flex';
+}
+
+function startStory(charKey) {
+currentCharacter = charKey;
+const char = characters[charKey];
+setStoryColor(char.color);
+
+document.getElementById('intro').style.display = 'none';
+document.getElementById('story').style.display = 'flex';
+window.scrollTo(0, 0);
+
+document.getElementById('storyBadge').textContent = char.role;
+document.getElementById('storyTitle').innerHTML = char.title;
+document.getElementById('storyEp').textContent = char.episode;
+
+// Build the cliffhanger / end card block
+let endBlock = '';
+
+if (charKey === 'ceo') {
+  // Season 1 finale + Season 2 teaser
+  endBlock = `
+  <div class="cliffhanger">
+    <div class="cliff-label">&#9632; Season 1 — Complete &#9632;</div>
+    <div class="cliff-text">Marcus learned two lessons: safer chemistry, connected data.<br><br><em>Based on documented industrial incidents.</em></div>
+    <div class="season-divider">&#9632; &nbsp; &#9632; &nbsp; &#9632;</div>
+    <div class="season2-teaser">
+      <div class="season2-label">&#9632; Season 2: The New Facility</div>
+      <div class="season2-title">Episode 4 — The New Facility</div>
+      <div class="season2-hook">Deni Cole has been keeping a personal log for seven months.<br>Nobody has asked to see it yet.</div>
+      <div class="cliff-next">&#9632; Coming Soon &#9632;</div>
+    </div>
+  </div>`;
+} else {
+  const nextLabel = charKey === 'engineer'
+    ? '&#9632; Episode 2 — THE TURNAROUND MANAGER — Now Available &#9632;'
+    : '&#9632; Episode 3 — THE GENERAL MANAGER — Now Available &#9632;';
+  endBlock = `
+  <div class="cliffhanger">
+    <div class="cliff-label">&#9632; To Be Continued &#9632;</div>
+    <div class="cliff-text">${char.cliffhanger}</div>
+    <div class="cliff-next">${nextLabel}</div>
+  </div>`;
+}
+
+document.getElementById('storyContent').innerHTML = `
+  <div class="story-body">
+    ${char.story}
+  </div>
+  ${endBlock}
+`;
+}
+
+document.getElementById('story').style.display = 'none';
+
 /* ====================== AUTOMATIC WEEKLY UNLOCK ====================== */
 const EPISODE_RELEASES = {
-  engineer: new Date('2026-03-30'),   // Week 1 — already live
-  manager:  new Date('2026-04-06'),   // Week 2 — live today
-  ceo:      new Date('2026-04-13')    // Week 3 — next Monday
-  // Add future weeks here, e.g. week4: new Date('2026-04-20'),
+engineer: new Date('2026-03-30'),  // Week 1 — already live
+manager:  new Date('2026-04-06'),  // Week 2 — live
+ceo:      new Date('2026-04-13')   // Week 3 — live
+// Add future weeks here, e.g. week4: new Date('2026-04-20'),
 };
 
 function isReleased(charKey) {
-  const releaseDate = EPISODE_RELEASES[charKey];
-  return releaseDate && new Date() >= releaseDate;
+const releaseDate = EPISODE_RELEASES[charKey];
+return releaseDate && new Date() >= releaseDate;
 }
 
 function autoUnlockCards() {
-  document.querySelectorAll('.char-card').forEach(card => {
-    let charKey = null;
-    if (card.classList.contains('manager')) charKey = 'manager';
-    else if (card.classList.contains('ceo')) charKey = 'ceo';
-    else return; // engineer is always unlocked
+document.querySelectorAll('.char-card').forEach(card => {
+  let charKey = null;
+  if (card.classList.contains('manager')) charKey = 'manager';
+  else if (card.classList.contains('ceo')) charKey = 'ceo';
+  else return; // engineer is always unlocked
 
-    if (isReleased(charKey)) {
-      card.classList.remove('locked');
-      card.onclick = () => startStory(charKey);
-
-      // remove the lock badge if it still exists
-      const badge = card.querySelector('.lock-badge');
-      if (badge) badge.remove();
-    }
-  });
+  if (isReleased(charKey)) {
+    card.classList.remove('locked');
+    card.onclick = () => startStory(charKey);
+    // remove the lock badge if it still exists
+    const badge = card.querySelector('.lock-badge');
+    if (badge) badge.remove();
+  }
+});
 }
 
 // Run it when the page loads
 window.addEventListener('load', autoUnlockCards);
-/* ==================================================================== */</script>
-
+/* ==================================================================== */
+</script>
 </body>
 </html>
